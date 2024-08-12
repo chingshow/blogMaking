@@ -86,7 +86,7 @@ def main(inputFile, exist, path):
         with open(f'./{path}/content.json', 'r', encoding="utf-8") as fJson:
             load_dict = json.load(fJson)
 
-            documents = load_dict['documents']['items']
+            documents = load_dict['articles']
             newDocument = {}
             newDocument['titles'] = title_name
             newDocument['author'] = auther

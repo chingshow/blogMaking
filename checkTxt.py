@@ -26,7 +26,6 @@ def main(path):
             if str(item['no']) + ".txt" == document:
                 exist = 1
                 break
-        # 發現不存在這個文章 --> 開始產生html
         generateHtml.main(document, exist, path)
 
     # --- sort json --- #

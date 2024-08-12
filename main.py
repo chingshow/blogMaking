@@ -38,6 +38,7 @@ def main():
             if datas[key]["有改動"] == "Yes" and datas[key]["已確認"] == "Yes":
                 dataTitle = datas[key]["Website"]
                 if dataTitle not in sites:
+                    # print(dataTitle)
                     sites.append(dataTitle)
                 # 新海報長新網站(init)
                 if not project_exists_locally(dataTitle, "."):
@@ -65,9 +66,6 @@ def main():
             print("Git process completed successfully")
         else:
             print("Git process failed or no changes to commit")
-
-
-        # print(datas[key]["_ragicId"])
 
     dict_iter = iter(datas)
     while True:
