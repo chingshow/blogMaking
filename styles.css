@@ -69,6 +69,15 @@ main {
     border-radius: 5px;
 }
 
+.no-articles {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 20px 0;
+    margin: 20px 0;
+    color: #666;
+}
+
 .article {
     background-color: #fff;
     margin-bottom: 1rem;

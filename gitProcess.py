@@ -2,13 +2,6 @@ import os
 from dotenv import load_dotenv
 from git import Repo
 import datetime
-import threading
-
-class TimeoutException(Exception):
-    pass
-
-def timeout_handler(signum, frame):
-    raise TimeoutException("Push operation timed out")
 
 
 def setup_git_config(repo):
@@ -26,17 +19,13 @@ def setup_git_config(repo):
     print(f"Git config set to: User = {git_username}, Email = {git_email}")
 
 
-from git import Repo, RemoteProgress
-import datetime
-import time
-
-def auto_git_process(repo_path, commit_message, retries=3, timeout=30):
+def auto_git_process(repo_path, commit_message):
     try:
         repo = Repo(repo_path)
         setup_git_config(repo)
 
         if not repo.is_dirty(untracked_files=True):
-            print(f"No changes to commit in {repo_path}")
+            print("No changes to commit")
             return False
 
         repo.git.add(A=True)
@@ -45,34 +34,16 @@ def auto_git_process(repo_path, commit_message, retries=3, timeout=30):
         print(f"Author: {commit.author.name} <{commit.author.email}>")
 
         origin = repo.remote('origin')
+        push_info = origin.push()
 
-        def raise_timeout_exception():
-            raise TimeoutException("Push operation timed out")
+        for info in push_info:
+            print(f"Push info: {info.summary}")
 
-        for attempt in range(1, retries + 1):
-            timer = threading.Timer(timeout, raise_timeout_exception)
-            try:
-                timer.start()
-                push_info = origin.push()
-                timer.cancel()  # 推送成功，取消超時計時
-                for info in push_info:
-                    print(f"Push info: {info.summary}")
-                print(f"Successfully pushed changes from {repo_path} on attempt {attempt}")
-                return True
-            except TimeoutException:
-                print(f"Push operation timed out after {timeout} seconds")
-            except Exception as push_error:
-                print(f"Attempt {attempt} failed to push {repo_path}: {str(push_error)}")
-                if attempt < retries:
-                    time.sleep(2)  # 等待幾秒再重試
-                else:
-                    print(f"Failed to push changes from {repo_path} after {retries} attempts")
-                    return False
-            finally:
-                timer.cancel()
+        print(f"Successfully added, committed, and pushed changes")
+        return True
 
     except Exception as e:
-        print(f"An error occurred in {repo_path}: {str(e)}")
+        print(f"An error occurred: {str(e)}")
         return False
 
 

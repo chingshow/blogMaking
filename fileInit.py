@@ -20,7 +20,7 @@ def main(repo_path):
                      ".gitignore",
                      f"./index.html",
                      f"./styles.css",
-                     "./ad.jpg"]
+                     "./documents/ad_init.png"]
 
     # 複製文件到倉庫
     for file_path in files_to_copy:
@@ -31,7 +31,7 @@ def main(repo_path):
         else:
             print(f"File not found: {file_path}")
 
-    dirMake = ["documents"]
+    dirMake = ["documents", "images"]
 
     for dirs in dirMake:
         subfolder_path = os.path.join(repo.working_dir, dirs)
@@ -50,5 +50,5 @@ def main(repo_path):
 
 # 使用示例
 if __name__ == "__main__":
-    repo_path = "./Brain tumor"  # 替換為你的倉庫路徑
-    main(repo_path)
+    repo_path = "./Avater Medicine 2023"  # 替換為你的倉庫路徑
+    main(repo_path, "模板2")

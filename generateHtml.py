@@ -9,7 +9,7 @@ import codecs
 from dominate.util import raw
 from bs4 import BeautifulSoup
 
-def main(inputFile, exist, path):
+def main(inputFile1, inputFile2, exist, path, new_data):
     # --------generate html from txt----------------#
     # html init
     newHtml = dominate.document()
@@ -18,7 +18,8 @@ def main(inputFile, exist, path):
     title = newHtml.add(div(id="title", className="container"))
     content = newHtml.add(div(id="content", className="container"))
 
-    filepath = os.path.join(f'./{path}/documents/txt/', inputFile)
+    filepath = os.path.join(f'./{path}/documents/txt/', inputFile1)
+    print(filepath)
     #print(filepath)
     # read txt
     f = open(filepath, encoding="utf-8")
@@ -57,42 +58,47 @@ def main(inputFile, exist, path):
             length += 1
     f.close()
 
-    #print(no)
-    input_file = codecs.open(f'{path}/documents/txt/{no}.md', mode="r", encoding="utf-8")
+    filepath = os.path.join(f'./{path}/documents/txt/', inputFile2)
+    print(path, inputFile2)
+    print(filepath)
+    #input_file = codecs.open(filepath, 'r', encoding="utf-8")
+    input_file = open(filepath, encoding="utf-8")
     text = input_file.read()
-    html_content  = markdown.markdown(text)
-
-    #print(html)
+    #print("Markdown content:", text)
+    html_content = markdown.markdown(text)
+    #print("HTML content:", html_content)
 
     soup = BeautifulSoup(html_content, 'html.parser')
 
+    print("Soup contents:", soup.contents)
+
     for element in soup.contents:
+        print("Processing element:", element)
         if element.name:
-            # 使用 raw() 函數來插入原始HTML
             content.add(getattr(dominate.tags, element.name)(raw(str(element))))
         else:
             content.add(raw(str(element)))
 
+    print("Final content:", content.render())
+
     # document name
-    filepath = f'./{path}/documents/' + no + '.html'
+    filepath = f'./{path}/documents/' + str(new_data["no"]) + '.html'
 
     with open(filepath, 'w', encoding="utf-8") as f:
         f.write(newHtml.render())
 
     # --------finish generate html from txt----------------#
-    if exist == 0:
-        # edit json
-
+    if not exist:
+        print(f"Adding new document: {no}")
         with open(f'./{path}/content.json', 'r', encoding="utf-8") as fJson:
             load_dict = json.load(fJson)
 
-            documents = load_dict['articles']
-            newDocument = {}
-            newDocument['titles'] = title_name
-            newDocument['author'] = auther
-            newDocument['no'] = no
-            documents.append(newDocument)
+            documents = load_dict['documents']['items']
+            if not any(doc['no'] == no for doc in documents):
+                documents.append(new_data)
 
         with open(f'./{path}/content.json', 'w', encoding="utf-8") as fJson:
             json.dump(load_dict, fJson, ensure_ascii=False, indent=4)
+    else:
+        print(f"Document {no} already exists, skipping JSON update")
 

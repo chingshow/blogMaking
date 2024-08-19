@@ -5,18 +5,38 @@ let currentFilter = null;
 let currentFilterType = null;
 let currentFilterValue = null;
 
-// 從 JSON 文件加載文章元數據
-fetch('content.json')
-    .then(response => response.json())
-    .then(data => {
-        articles = data.articles;
-        document.getElementById('title').textContent = data.title;
-        displayArticles(currentPage);
-        updatePagination();
-        populateSidebar();
-        updateFilterStatus();
-    })
-    .catch(error => console.error('Error loading articles:', error));
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tag = urlParams.get('tag');
+
+    if (tag) {
+        currentFilterType = 'tag';
+        currentFilterValue = tag;
+    }
+
+    // 從 JSON 文件加載文章元數據
+    fetch('content.json')
+        .then(response => response.json())
+        .then(data => {
+            articles = data.documents.items || [];
+            document.getElementById('title').textContent = data.hero.title;
+            document.getElementById('headtitle').textContent = data.siteTitle;
+            document.documentElement.style.setProperty('--primary-color', data.color1);
+            document.documentElement.style.setProperty('--secondary-color', data.color2);
+            document.documentElement.style.setProperty('--text-color', data.color3);
+            document.documentElement.style.setProperty('--background-color', data.color4);
+            document.documentElement.style.setProperty('--accent-color', data.color5);
+            if (tag) {
+                filterArticles('tag', tag);
+            } else {
+                displayArticles(currentPage);
+            }
+            updatePagination();
+            populateSidebar();
+            updateFilterStatus();
+        })
+        .catch(error => console.error('Error loading articles:', error));
+});
 
 document.getElementById('homePage').addEventListener('click', function(e) {
     e.preventDefault();
@@ -34,41 +54,48 @@ function resetToHomePage() {
     scrollToTop();
 }
 
-
 function displayArticles(page) {
-    const start = (page - 1) * articlesPerPage;
-    const end = start + articlesPerPage;
     const articleContainer = document.getElementById('articles');
     articleContainer.innerHTML = '';
 
     const displayedArticles = currentFilter ? currentFilter : articles;
 
-    for (let i = start; i < end && i < displayedArticles.length; i++) {
-        const article = displayedArticles[i];
-        const articleElement = document.createElement('a');
-        articleElement.className = 'article';
-        articleElement.href = `./documents/${article.no}.html`;
-        articleElement.target = '_blank';
-        articleElement.innerHTML = `
-            <h2>${article.titles}</h2>
-            <div class="article-meta">
-                作者: ${article.author} | 日期: ${article.date} | 標籤: ${article.tags.join(', ')}
-            </div>
-        `;
-        articleContainer.appendChild(articleElement);
+    if (displayedArticles.length === 0) {
+        const noArticlesElement = document.createElement('div');
+        noArticlesElement.textContent = "目前沒有文章";
+        noArticlesElement.className = "no-articles"
+        articleContainer.appendChild(noArticlesElement);
+    } else {
+        const start = (page - 1) * articlesPerPage;
+        const end = start + articlesPerPage;
+
+        for (let i = start; i < end && i < displayedArticles.length; i++) {
+            const article = displayedArticles[i];
+            const articleElement = document.createElement('a');
+            articleElement.className = 'article';
+            articleElement.href = `./documents/${article.no}.html`;
+            articleElement.innerHTML = `
+                <h2>${article.titles}</h2>
+                <div class="article-meta">
+                    作者: ${article.author} | 日期: ${article.date} | 標籤: ${article.tags.join(', ')}
+                </div>
+            `;
+            articleContainer.appendChild(articleElement);
+        }
     }
     window.scrollTo(0, 0);
 }
 
 function updatePagination() {
     const totalArticles = currentFilter ? currentFilter.length : articles.length;
-    const totalPages = Math.ceil(totalArticles / articlesPerPage);
+    const totalPages = Math.max(1, Math.ceil(totalArticles / articlesPerPage)); // 確保至少有1頁
     document.getElementById('prevPage').disabled = currentPage === 1;
     document.getElementById('nextPage').disabled = currentPage >= totalPages;
 
     // 更新當前頁碼顯示
     document.getElementById('currentPage').textContent = `第 ${currentPage} 頁,共 ${totalPages} 頁`;
 }
+
 document.getElementById('prevPage').addEventListener('click', () => {
     if (currentPage > 1) {
         currentPage--;
@@ -140,7 +167,6 @@ function clearFilter() {
     updatePagination();
     updateFilterStatus();
     resetToHomePage();
-
 }
 
 function updateFilterStatus() {

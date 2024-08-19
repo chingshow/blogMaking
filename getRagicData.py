@@ -13,7 +13,7 @@ def main():
 
     base_url = 'https://ap12.ragic.com/cancerfree'
     tag = "articles"
-    sheet_id = "4"
+    sheet_id = "6"
 
     ENDPOINT = f'{base_url}/{tag}/{sheet_id}'
     response = requests.get(ENDPOINT, params=params, headers={'Authorization': 'Basic '+api_key})
