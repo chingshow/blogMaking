@@ -91,7 +91,7 @@ code {
   color: #666;
 }
 
-p {
+p, code {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -99,6 +99,22 @@ p {
 ul {
    padding-left: 20px;
 }
+
+pre code {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+}
+
+pre {
+  overflow-x: auto;
+}
+
+.container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 
 @media (max-width: 600px) {
     body {

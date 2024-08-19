@@ -70,16 +70,16 @@ def main(inputFile1, inputFile2, exist, path, new_data):
 
     soup = BeautifulSoup(html_content, 'html.parser')
 
-    print("Soup contents:", soup.contents)
+    #print("Soup contents:", soup.contents)
 
     for element in soup.contents:
-        print("Processing element:", element)
+        #print("Processing element:", element)
         if element.name:
             content.add(getattr(dominate.tags, element.name)(raw(str(element))))
         else:
             content.add(raw(str(element)))
 
-    print("Final content:", content.render())
+    #print("Final content:", content.render())
 
     # document name
     filepath = f'./{path}/documents/' + str(new_data["no"]) + '.html'
