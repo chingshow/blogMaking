@@ -3,6 +3,7 @@ from requests.auth import HTTPBasicAuth
 from dotenv import load_dotenv
 import os
 import json
+import glob
 import checkTxt
 import finishUpdate
 
@@ -38,6 +39,16 @@ def main(site):
                 if load_dict[key]['Website'] == site and load_dict[key]['有改動'] == "Yes":
                     if load_dict[key]['available'] == "No":
                         print("bad")
+                        with open(f'./{site}/content.json', 'r', encoding="utf-8") as file:
+                            content = json.load(file)
+                        content['documents']['items'] = [item for item in content['documents']['items'] if item['no'] != int(key)]
+
+                        with open(f'./{site}/content.json', 'w', encoding="utf-8") as file:
+                            json.dump(content, file, ensure_ascii=False, indent=4)
+                        os.remove(f'./{site}/documents/txt/{key}.md')
+                        os.remove(f'./{site}/documents/txt/{key}.txt')
+                        os.remove(f'./{site}/documents/{key}.html')
+
                     else:
                         value = load_dict[key]["Title"]
                         no = load_dict[key]['_ragicId']

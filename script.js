@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
             articles = data.documents.items || [];
             document.getElementById('title').textContent = data.hero.title;
             document.getElementById('headtitle').textContent = data.siteTitle;
+            document.getElementById("adLink").href = data.ad.link;
+            document.getElementById("adImg").src = data.ad.image;
             document.documentElement.style.setProperty('--primary-color', data.color1);
             document.documentElement.style.setProperty('--secondary-color', data.color2);
             document.documentElement.style.setProperty('--text-color', data.color3);

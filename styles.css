@@ -1,20 +1,29 @@
+:root {
+  --primary-color: #333;
+  --secondary-color: #444;
+  --text-color: #fff;
+  --background-color: #f4f4f4;
+  --accent-color: #666;
+}
+
+
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: var(--background-color);
 }
 
 header {
-    background-color: #333;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--text-color);
     text-align: center;
     padding: 1rem;
 }
 
 nav {
-    background-color: #444;
+    background-color: var(--secondary-color);
     padding: 0.5rem;
     position: sticky;
     top: 0;
@@ -22,7 +31,7 @@ nav {
 }
 
 nav a {
-    color: #fff;
+    color: var(--text-color);
     text-decoration: none;
 }
 
@@ -42,7 +51,7 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 2rem); /* 視窗高度減去容器的 padding */
+    height: calc(100vh - 2rem);
     position: sticky;
     top: 1rem;
 }
@@ -50,14 +59,14 @@ main {
 #sidebarContent {
     flex: 1;
     overflow-y: auto;
-    background-color: #fff;
+    background-color: var(--text-color);
     padding: 1rem;
     border-radius: 5px 5px 0 0;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 #stickyImageContainer {
-    background-color: #fff;
+    background-color: var(--text-color);
     padding: 1rem;
     border-radius: 0 0 5px 5px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -79,7 +88,7 @@ main {
 }
 
 .article {
-    background-color: #fff;
+    background-color: var(--text-color);
     margin-bottom: 1rem;
     padding: 1rem;
     border-radius: 5px;
@@ -92,18 +101,18 @@ main {
 
 .article:hover {
     background-color: #f0f0f0;
-    color: #333;
+    color: var(--primary-color);
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
 .article h2 {
     margin-top: 0;
-    color: #333;
+    color: var(--primary-color);
 }
 
 .article-meta {
     font-size: 0.9em;
-    color: #666;
+    color: var(--accent-color);
 }
 
 .article:hover h2,
@@ -119,32 +128,38 @@ main {
 #currentPage {
     margin: 0 10px;
     font-weight: bold;
+    color: var(--accent-color);
 }
 
-button {
-    background-color: #333;
-    color: #fff;
+main button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
     border: none;
     padding: 0.5rem 1rem;
     cursor: pointer;
     margin: 0 0.5rem;
 }
 
-button:disabled {
+main button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+aside h3{
+    color: var(--primary-color);
 }
 
-li {
+aside ul {
+    list-style-type: none;
+    padding: 0;
+    color: var(--accent-color);
+}
+
+aside li {
     cursor: pointer;
     margin-bottom: 0.5rem;
 }
 
-li:hover {
+aside li:hover {
     text-decoration: underline;
 }

@@ -10,12 +10,11 @@ from gitProcess import auto_git_process
 import getRagicData
 import gitMake
 import fileInit
-import checkTxt
 import datetime
 import oneBlogDatas
 import oneBlogImages
 import getRagicContents
-import finishUpdate
+
 
 
 def project_exists_locally(project_name, base_path):
@@ -24,7 +23,6 @@ def project_exists_locally(project_name, base_path):
 
 
 def main():
-    print(open("./CRM/documents/txt/253.md").read())
     # get ragic
     n = getRagicData.main()
 
