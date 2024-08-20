@@ -34,9 +34,20 @@ def main():
         try:
             key = next(dict_iter)
             dataTitle = datas[key]["Website tag"]
+
+            if datas[key]['user name'] != "" and datas[key]['email'] != "" and datas[key]['github token'] != "":
+                git_username = datas[key]['user name']
+                git_email = datas[key]['email']
+                github_token = datas[key]['github token']
+            else:
+                load_dotenv()
+                git_username = os.getenv('GIT_USERNAME')
+                git_email = os.getenv('GIT_EMAIL')
+                github_token = os.getenv('GITHUB_TOKEN')
+
             # 新海報長新網站(init)
             if not project_exists_locally(dataTitle, "."):
-                gitMake.main(dataTitle)
+                gitMake.main(dataTitle, git_username, git_email, github_token)
                 fileInit.main(f"./{dataTitle}")
 
             # get
@@ -53,7 +64,7 @@ def main():
             repo_path = f"./{dataTitle}"
             commit_message = f"Article Updated {now.strftime('%Y/%m/%d %H:%M:%S')}"
 
-            success = auto_git_process(repo_path, commit_message)
+            success = auto_git_process(repo_path, commit_message, git_username, git_email, github_token)
             if success:
                 print("Git process completed successfully")
             else:

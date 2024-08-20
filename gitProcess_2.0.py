@@ -2,12 +2,12 @@ import os
 from dotenv import load_dotenv
 from git import Repo
 import datetime
-import re
 
-def setup_git_config(repo, git_username, git_email, github_token):
-    """load_dotenv()
+
+def setup_git_config(repo):
+    load_dotenv()
     git_username = os.getenv('GIT_USERNAME')
-    git_email = os.getenv('GIT_EMAIL')"""
+    git_email = os.getenv('GIT_EMAIL')
 
     if not git_username or not git_email:
         raise ValueError("GIT_USERNAME or GIT_EMAIL not set in .env file")
@@ -18,17 +18,11 @@ def setup_git_config(repo, git_username, git_email, github_token):
 
     print(f"Git config set to: User = {git_username}, Email = {git_email}")
 
-def auto_git_process(repo_path, commit_message, git_username, git_email, github_token):
+
+def auto_git_process(repo_path, commit_message):
     try:
         repo = Repo(repo_path)
-        setup_git_config(repo, git_username, git_email, github_token)
-
-        # 設置遠程 URL 使用 HTTPS 和 token
-        """github_token = os.getenv('GITHUB_TOKEN')
-        github_username = os.getenv('GIT_USERNAME')"""
-        remote_url = repo.remote('origin').url
-        auth_remote_url = re.sub(r'https://github.com', f'https://{git_username}:{github_token}@github.com', remote_url)
-        repo.remote('origin').set_url(auth_remote_url)
+        setup_git_config(repo)
 
         if not repo.is_dirty(untracked_files=True):
             print("No changes to commit")
@@ -51,6 +45,7 @@ def auto_git_process(repo_path, commit_message, git_username, git_email, github_
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return False
+
 
 if __name__ == "__main__":
     repo_path = "."  # 當前目錄
