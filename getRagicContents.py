@@ -36,7 +36,7 @@ def main(site):
         while True:
             try:
                 key = next(dict_iter)
-                if load_dict[key]['Website'] == site and load_dict[key]['有改動'] == "Yes":
+                if site in load_dict[key]['Website'] and load_dict[key]['有改動'] == "Yes":
                     if load_dict[key]['available'] == "No":
                         print("bad")
                         with open(f'./{site}/content.json', 'r', encoding="utf-8") as file:
@@ -69,7 +69,8 @@ def main(site):
                             "tags": load_dict[key]['Tags'],
                         }
                         checkTxt.main(key, site, new_data)
-                    finishUpdate.main(load_dict[key]["_ragicId"])
+                    if len(load_dict[key]['Website']) == 1:
+                        finishUpdate.main(load_dict[key]["_ragicId"])
             except StopIteration:
                 break
 

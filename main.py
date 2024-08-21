@@ -14,6 +14,7 @@ import datetime
 import oneBlogDatas
 import oneBlogImages
 import getRagicContents
+import finishUpdate
 
 
 
@@ -51,7 +52,7 @@ def main():
                 fileInit.main(f"./{dataTitle}")
 
             # get
-            # 生content.json .txt .md
+            # 生content.json
             oneBlogDatas.main(key, dataTitle)
 
             # add ./images
@@ -75,6 +76,19 @@ def main():
         except StopIteration:
             break
 
+    with open('content_article.json', 'r', encoding="utf-8") as fJson:
+        datas = json.load(fJson)
 
-main()
+    dict_iter = iter(datas)
+    while True:
+        try:
+            key = next(dict_iter)
+            if datas[key]["有改動"] == "Yes":
+                finishUpdate.main(datas[key]["_ragicId"])
+        except StopIteration:
+            break
+
+
+if __name__ == "__main__":
+    main()
 
