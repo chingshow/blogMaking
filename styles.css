@@ -78,6 +78,30 @@ main {
     border-radius: 5px;
 }
 
+#introTitle {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+#introContent {
+    background-color: var(--text-color);
+    padding: 1rem 3rem 3rem 3rem;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+#introContent p {
+    font-size: 1.2rem;
+}
+
+#introContent img {
+    max-width: 50%;
+    height: auto;
+    border-radius: 5px;
+}
+
 .no-articles {
     text-align: center;
     font-weight: bold;

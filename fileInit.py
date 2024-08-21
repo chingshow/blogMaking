@@ -2,6 +2,7 @@ import os
 from git import Repo
 import shutil
 
+
 def main(repo_path):
     # 檢查倉庫是否存在
     if not os.path.exists(repo_path):
@@ -16,10 +17,11 @@ def main(repo_path):
         print("Warning: Repository has uncommitted changes")
 
     # 定義要複製的文件列表
-    files_to_copy = [f"./script.js",
+    files_to_copy = ["./script.js",
                      ".gitignore",
-                     f"./index.html",
-                     f"./styles.css",
+                     "./index.html",
+                     "intro.html",
+                     "./styles.css",
                      "./documents/ad_init.png"]
 
     # 複製文件到倉庫
