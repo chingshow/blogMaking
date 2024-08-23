@@ -45,9 +45,14 @@ def main(site):
 
                         with open(f'./{site}/content.json', 'w', encoding="utf-8") as file:
                             json.dump(content, file, ensure_ascii=False, indent=4)
-                        os.remove(f'./{site}/documents/txt/{key}.md')
-                        os.remove(f'./{site}/documents/txt/{key}.txt')
-                        os.remove(f'./{site}/documents/{key}.html')
+
+                        def remove_if_exists(file_path):
+                            if os.path.exists(file_path):
+                                os.remove(file_path)
+
+                        remove_if_exists(f'./{site}/documents/txt/{key}.md')
+                        remove_if_exists(f'./{site}/documents/txt/{key}.txt')
+                        remove_if_exists(f'./{site}/documents/{key}.html')
 
                     else:
                         value = load_dict[key]["Title"]
