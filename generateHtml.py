@@ -88,17 +88,22 @@ def main(inputFile1, inputFile2, exist, path, new_data):
         f.write(newHtml.render())
 
     # --------finish generate html from txt----------------#
-    if not exist:
-        print(f"Adding new document: {no}")
-        with open(f'./{path}/content.json', 'r', encoding="utf-8") as fJson:
-            load_dict = json.load(fJson)
+    with open(f'./{path}/content.json', 'r', encoding="utf-8") as fJson:
+        load_dict = json.load(fJson)
 
-            documents = load_dict['documents']['items']
+        documents = load_dict['documents']['items']
+        if not exist:
             if not any(doc['no'] == no for doc in documents):
+                print(f"Adding new document: {no}")
                 documents.append(new_data)
+        else:
+            for doc in documents:
+                if doc['no'] == new_data['no']:
+                    print(new_data)
+                    doc.update(new_data)
+                    break
+            print(f"Document {no} already exists, skipping JSON update")
 
-        with open(f'./{path}/content.json', 'w', encoding="utf-8") as fJson:
-            json.dump(load_dict, fJson, ensure_ascii=False, indent=4)
-    else:
-        print(f"Document {no} already exists, skipping JSON update")
+    with open(f'./{path}/content.json', 'w', encoding="utf-8") as fJson:
+        json.dump(load_dict, fJson, ensure_ascii=False, indent=4)
 

@@ -50,7 +50,6 @@ def main(repo_path):
         print(f"Created subfolder: {subfolder_path}")
 
 
-# 使用示例
 if __name__ == "__main__":
-    repo_path = "./Avater Medicine 2023"  # 替換為你的倉庫路徑
-    main(repo_path, "模板2")
+    repo_path = "./Avater Medicine 2023"
+    main(repo_path)

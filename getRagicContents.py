@@ -36,7 +36,7 @@ def main(site):
         while True:
             try:
                 key = next(dict_iter)
-                if site in load_dict[key]['Website'] and load_dict[key]['有改動'] == "Yes":
+                if site.replace('-', ' ') in load_dict[key]['Website'] and load_dict[key]['有改動'] == "Yes":
                     if load_dict[key]['available'] == "No":
                         print("bad")
                         with open(f'./{site}/content.json', 'r', encoding="utf-8") as file:
