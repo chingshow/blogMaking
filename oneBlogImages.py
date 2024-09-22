@@ -51,7 +51,7 @@ def main(no, path):
     record = response_dict[f'{no}']
     os.makedirs(f'{path}/images', exist_ok=True)
 
-    image_fields = ['Image', 'Image2']
+    image_fields = ['Image', 'Image2', 'Image3', 'Image4']
     for field in image_fields:
         if field in record:
             download_image(record[field], path, base_url, api_key)

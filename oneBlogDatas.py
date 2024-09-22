@@ -53,10 +53,18 @@ def main(no, path):
             "title": "Documents",
             "items": load_existing_content(path)
         },
-        "ad": {
+        "ad1": {
             "image": checkImage(data[no]['Image2']),
             "content": data[no]['content'],
             "link": data[no]['link']
+        },
+        "ad2": {
+            "image": checkImage(data[no]['Image3']),
+            "link": data[no]['link2']
+        },
+        "ad3": {
+            "image": checkImage(data[no]['Image4']),
+            "link": data[no]['link3']
         }
     }
 
@@ -65,5 +73,6 @@ def main(no, path):
         json.dump(new_data, file, ensure_ascii=False, indent=4)
 
 
-
+if __name__ == "__main__":
+    main('3', '.')
 
