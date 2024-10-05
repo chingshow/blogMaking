@@ -1,6 +1,6 @@
 let articles = [];
 let currentPage = 1;
-const articlesPerPage = 25;
+const articlesPerPage = 15;
 let currentFilter = null;
 let currentFilterType = null;
 let currentFilterValue = null;
@@ -26,10 +26,13 @@ document.addEventListener('DOMContentLoaded', function() {
             //document.getElementById("adLink2").href = data.ad2.link;
             //document.getElementById("adImg2").src = data.ad2.image;
 
-            createStickyImage(data.ad1, 'stickyImage');
-            createStickyImage(data.ad2, 'stickyImage2');
+            createStickyImage(data.ad1, 'stickyImage', 'stickyImageContainer');
+            createStickyImage(data.ad2, 'stickyImage2', 'stickyImageContainer');
+            createStickyImage(data.ad1, 'stickyImage2', 'stickyImageContainer2');
+            createStickyImage(data.ad2, 'stickyImage22', 'stickyImageContainer2');
             createAd3(data.ad3);
-            createTagCloud();
+            createTagCloud('tagCloud', 'stickyImageContainer');
+            createTagCloud('tagCloud2', 'stickyImageContainer2');
 
             document.documentElement.style.setProperty('--primary-color', data.color1);
             document.documentElement.style.setProperty('--secondary-color', data.color2);
@@ -48,9 +51,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error loading articles:', error));
 });
 
-function createTagCloud() {
+function createTagCloud(id, div) {
     const tagCloudContainer = document.createElement('div');
-    tagCloudContainer.id = 'tagCloud';
+    tagCloudContainer.id = id;
     tagCloudContainer.className = 'bg-orange-300 p-4 rounded-lg shadow-md';
     tagCloudContainer.style.width = '100%';
 
@@ -60,7 +63,7 @@ function createTagCloud() {
     tagCloudSvg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
     tagCloudContainer.appendChild(tagCloudSvg);
 
-    const sidebar = document.getElementById('stickyImageContainer');
+    const sidebar = document.getElementById(div);
     sidebar.insertBefore(tagCloudContainer, sidebar.firstChild);
 
     const baseWidth = 400; // 基準寬度
@@ -150,9 +153,9 @@ function createTagCloud() {
 }
 
 
-function createStickyImage(adData, id) {
+function createStickyImage(adData, id, div) {
     if (adData.image && adData.image !== "") {
-        const stickyImageContainer = document.getElementById('stickyImageContainer');
+        const stickyImageContainer = document.getElementById(div);
         const stickyImageDiv = document.createElement('div');
         stickyImageDiv.id = id;
         stickyImageDiv.innerHTML = `
