@@ -60,10 +60,12 @@ def main(no, path):
         },
         "ad2": {
             "image": checkImage(data[no]['Image3']),
+            "content": data[no]['content2'],
             "link": data[no]['link2']
         },
         "ad3": {
             "image": checkImage(data[no]['Image4']),
+            "content": data[no]['content3'],
             "link": data[no]['link3']
         }
     }

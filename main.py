@@ -143,7 +143,7 @@ def main():
                 except Exception as e:
                     print(f"刪除資料夾時發生錯誤: {e}")
                     return False
-            time.sleep(5)
+            #time.sleep(5)
             delete_folder(f"./{dataTitle}")
 
         except StopIteration:
