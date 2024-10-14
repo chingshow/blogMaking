@@ -11,20 +11,21 @@ def webhook():
     if request.method == 'POST':
         print("Received webhook")
 
+        data = json.dumps(request.json, indent=2)
         # 打印接收到的全部數據
         print("request data:")
-        print(json.dumps(request.json, indent=2))
+        print(data)
+        data = json.loads(data)
+        print(data['sheetIndex'])
 
-        # 打印請求頭
-        #print("Request headers:")
-        #print(request.headers)
+        if data['sheetIndex'] == 6:
+            print(data["data"][0]["_ragicId"])
+            subprocess.run(["python", "main.py", str(data["data"][0]["_ragicId"])])
+        else:
+            # 執行 main.py
+            subprocess.run(["python", "main.py"])
 
-        # 打印表單數據（如果有）
-        #print("Form data:")
-        #print(request.form)
 
-        # 執行 main.py
-        subprocess.run(["python", "main.py"])
 
         return "OK", 200
     return "Webhook receiver is running", 200

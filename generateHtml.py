@@ -1,97 +1,109 @@
-# -*- coding: utf-8 -*-
 import os
+from dominate import document
 from dominate.tags import *
-import dominate
-import json
-import sys
-import markdown
-import codecs
 from dominate.util import raw
+import json
+import markdown
 from bs4 import BeautifulSoup
 
-def main(inputFile1, inputFile2, exist, path, new_data):
-    # --------generate html from txt----------------#
-    # html init
-    newHtml = dominate.document()
-    newHtml.add(link(rel="stylesheet", href="./styles2.css"))
-    newHtml.add(meta(charset="utf-8"))
-    title = newHtml.add(div(id="title", className="container"))
-    content = newHtml.add(div(id="content", className="container"))
 
+def mainf(inputFile1, inputFile2, exist, path, new_data):
+    # HTML init
+    newHtml = document(title="")
+
+    with newHtml.head:
+        meta(charset="utf-8")
+        link(rel="stylesheet", href="../styles.css")
+        link(rel="stylesheet", href="./styles2.css")
+
+    # Add functions div
+    with newHtml:
+        with nav():
+            with div(cls="functions"):
+                a("首頁", href="../index.html", id="homePage")
+                a("回到頂部", href="#", id="backToTop")
+
+    # Add title div
+    title_div = newHtml.add(div(id="title", cls="container"))
+
+    # Add contents div
+    contents_div = newHtml.add(div(id="contents"))
+
+    with contents_div:
+        div(id="stickyImageContainer")
+        with main():
+            div(id="ad3Container", hidden="")
+            content_div = div(id="content")
+
+    # Add sidebar and sticky image container
+    with contents_div:
+        with aside(id="sidebar"):
+            with div(id="sidebarContent"):
+                with section():
+                    h3("日期歸檔")
+                    ul(id="dateArchive")
+                with section():
+                    h3("標籤")
+                    ul(id="tagList")
+            div(id="stickyImageContainer2", hidden="")
+
+    # Read and process inputFile1
     filepath = os.path.join(f'./{path}/documents/txt/', inputFile1)
-    print(filepath)
-    #print(filepath)
-    # read txt
-    f = open(filepath, encoding="utf-8")
-    length = 0
-    for line in f.readlines():
-        if line[0] != ' ' and line[0] != '\n':
-            if length == 0:
-                num = line
-                no = []
-                for char in num:
-                    if char != '\n':
-                        no.append(char)
-                no = ''.join(str(x) for x in no)
-            elif length == 1:
-                title.add(p(line, id="date"))
-            elif length == 2:
-                title_name = []
-                for char in line:
-                    if char != '\n':
-                        title_name.append(char)
-                title_name = ''.join(str(x) for x in title_name)
-                title.add(h1(title_name, id="title_name"))
-                newHtml.title = title_name
-            elif length == 3:
-                auther = []
-                for char in line:
-                    if char != '\n':
-                        auther.append(char)
-                auther = ''.join(str(x) for x in auther)
-                title.add(h2(auther, id="auther"))
+    #filepath = os.path.join(f'.', inputFile1)
+    with open(filepath, encoding="utf-8") as f:
+        lines = f.readlines()
+
+    for i, line in enumerate(lines):
+        line = line.strip()
+        if i == 0:
+            no = line
+        elif i == 1:
+            title_div.add(p(line, id="date"))
+        elif i == 2:
+            title_name = line
+            title_div.add(h1(title_name, id="title_name"))
+            newHtml.title = title_name
+        elif i == 3:
+            auther = line
+            title_div.add(h2(auther, id="auther"))
+        else:
+            if line.startswith('*'):
+                content_div.add(h3(line[1:]))
             else:
-                if(line[0] == '*'):
-                    content.add(h3(line[1:]))
-                else:
-                    content.add(p(line))
-            length += 1
-    f.close()
+                content_div.add(p(line))
 
+    # Process inputFile2
     filepath = os.path.join(f'./{path}/documents/txt/', inputFile2)
-    print(path, inputFile2)
-    print(filepath)
-    #input_file = codecs.open(filepath, 'r', encoding="utf-8")
-    input_file = open(filepath, encoding="utf-8")
-    text = input_file.read()
-    #print("Markdown content:", text)
-    html_content = markdown.markdown(text)
-    #print("HTML content:", html_content)
+   # filepath = os.path.join(f'.', inputFile2)
+    with open(filepath, encoding="utf-8") as input_file:
+        text = input_file.read()
 
+    html_content = markdown.markdown(text)
     soup = BeautifulSoup(html_content, 'html.parser')
 
-    #print("Soup contents:", soup.contents)
-
     for element in soup.contents:
-        #print("Processing element:", element)
         if element.name:
-            content.add(getattr(dominate.tags, element.name)(raw(str(element))))
+            content_div.add(raw(str(element)))
         else:
-            content.add(raw(str(element)))
+            content_div.add(raw(str(element)))
 
-    #print("Final content:", content.render())
+    with newHtml:
+        script(src="script_articles.js")
+        script(src="https://d3js.org/d3.v6.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js")
 
-    # document name
-    filepath = f'./{path}/documents/' + str(new_data["no"]) + '.html'
-
+    # Write the HTML file
+    filepath = f'./{path}/documents/{no}.html'
+    #filepath = f'{no}.html'
     with open(filepath, 'w', encoding="utf-8") as f:
         f.write(newHtml.render())
 
-    # --------finish generate html from txt----------------#
-    with open(f'./{path}/content.json', 'r', encoding="utf-8") as fJson:
+    # Update JSON file
+    json_path = f'./{path}/content.json'
+    with open(json_path, 'r', encoding="utf-8") as fJson:
         load_dict = json.load(fJson)
-
         documents = load_dict['documents']['items']
+
         if not exist:
             if not any(doc['no'] == no for doc in documents):
                 print(f"Adding new document: {no}")
@@ -104,6 +116,8 @@ def main(inputFile1, inputFile2, exist, path, new_data):
                     break
             print(f"Document {no} already exists, skipping JSON update")
 
-    with open(f'./{path}/content.json', 'w', encoding="utf-8") as fJson:
+    with open(json_path, 'w', encoding="utf-8") as fJson:
         json.dump(load_dict, fJson, ensure_ascii=False, indent=4)
+
+
 

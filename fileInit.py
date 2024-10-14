@@ -43,6 +43,7 @@ def main(repo_path):
             destination = os.path.join(repo.working_dir, os.path.basename("./documents"))
             print(destination)
             shutil.copy2("./documents/styles2.css", subfolder_path)
+            shutil.copy2("./documents/script_articles.js", subfolder_path)
 
             subfolder_path = os.path.join(subfolder_path, "txt")
             os.makedirs(subfolder_path, exist_ok=True)

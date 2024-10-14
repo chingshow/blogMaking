@@ -14,20 +14,10 @@ def main(key, path, new_data):
     # 獲取所有 .txt 文件
     documentLocal = [file for file in os.listdir(folder_path) if file.endswith('.txt')]
 
-    #for document in documentLocal:
-        # 移除 .txt 擴展名並檢查是否在 documents 列表中
-        #document_no = int(document.split(".")[0])
-
-
-        #print(f"Document: {document}")
-        #print(f"Document No: {document_no}")
-        #print(f"Documents: {documents}")
-        #print(f"Exist: {exist}")
-
     exist = key in documents
     print(exist)
     print(new_data)
-    generateHtml.main(f"{key}.txt", f"{key}.md", exist, path, new_data)
+    generateHtml.mainf(f"{key}.txt", f"{key}.md", exist, path, new_data)
 
     #print(f"Final exist value for {document}: {exist}")
     #print("------------------------")

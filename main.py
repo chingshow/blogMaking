@@ -9,6 +9,7 @@ from os import listdir
 import json
 import stat
 import subprocess
+import sys
 
 from gitProcess import auto_git_process
 import getRagicData
@@ -48,6 +49,8 @@ def check_repo_exists(owner, repo, token):
 
 
 def main():
+    arguments = sys.argv[1:]
+
     # get ragic
     n = getRagicData.main()
 
@@ -84,8 +87,10 @@ def main():
             oneBlogDatas.main(key, dataTitle)
 
             # add ./images
-            oneBlogImages.main(key, dataTitle)
-
+            if len(arguments) != 0:
+                if arguments[0] == str(datas[key]["_ragicId"]):
+                    oneBlogImages.main(key, dataTitle)
+            #oneBlogImages.main(key, dataTitle)
             getRagicContents.main(dataTitle)
             # add .
             # push
@@ -130,14 +135,22 @@ def main():
                     return False
                 except PermissionError:
                     print(f"沒有權限刪除資料夾: {folder_path}")
-                    return False
+                    try:
+                        os.system("rm -rf" + folder_path)
+                    except Exception as e:
+                        print(f"刪除資料夾時發生錯誤: {e}")
+                        return False
                 except Exception as e:
                     print(f"刪除資料夾時發生錯誤: {e}")
                     return False
-            time.sleep(1)
+            time.sleep(5)
             delete_folder(f"./{dataTitle}")
 
         except StopIteration:
+            break
+
+        except Exception as e:
+            print(e)
             break
 
     with open('content_article.json', 'r', encoding="utf-8") as fJson:
