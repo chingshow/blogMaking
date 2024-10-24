@@ -23,9 +23,7 @@ def webhook():
             subprocess.run(["python", "main.py", str(data["data"][0]["_ragicId"])])
         else:
             # 執行 main.py
-            subprocess.run(["python", "main.py"])
-
-
+            subprocess.run(["python", "main_5.py"])
 
         return "OK", 200
     return "Webhook receiver is running", 200

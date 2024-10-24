@@ -56,8 +56,8 @@ def main():
 
     with open('content_all.json', 'r', encoding='utf-8') as file:
         datas = json.load(file)
-    dict_iter = iter(datas)
 
+    dict_iter = iter(datas)
     while True:
         try:
             key = next(dict_iter)
@@ -90,7 +90,7 @@ def main():
             if len(arguments) != 0:
                 if arguments[0] == str(datas[key]["_ragicId"]):
                     oneBlogImages.main(key, dataTitle)
-            #oneBlogImages.main(key, dataTitle)
+            oneBlogImages.main(key, dataTitle)
             getRagicContents.main(dataTitle)
             # add .
             # push

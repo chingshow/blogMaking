@@ -8,6 +8,7 @@ import checkTxt
 import finishUpdate
 
 
+
 def main(site):
     tag = site.replace('-', ' ')
     params = {'api': '', 'v': 3, 'where': [
@@ -15,12 +16,16 @@ def main(site):
         '1003464,eq,Yes',  # 已確認
         '1003463,eq,Yes'   # 有改動
     ]}
+
+    params = {'api': '', 'v': 3, 'where': [
+        f'1003227,eq,{tag}',  # Website
+    ]}
     # 设置API密钥和URL
     load_dotenv()
     api_key = os.getenv('RAGIC_API_2')
     base_url = 'https://ap12.ragic.com/cancerfree'
     tag = "articles"
-    sheet_id = "4"
+    sheet_id = "7"
 
     ENDPOINT = f'{base_url}/{tag}/{sheet_id}'
     response = requests.get(ENDPOINT, params=params, headers={'Authorization': 'Basic '+api_key})
@@ -87,5 +92,26 @@ def main(site):
                 break
 
 
+def checkAll(site):
+    params = {'api': '', 'v': 3, 'where': f'1005231,like,{site}'}
+    # 设置API密钥和URL
+    load_dotenv()
+    api_key = os.getenv('RAGIC_API_2')
+    base_url = 'https://ap12.ragic.com/cancerfree'
+    tag = "articles"
+    sheet_id = "7"
+
+    ENDPOINT = f'{base_url}/{tag}/{sheet_id}'
+    response = requests.get(ENDPOINT, params=params, headers={'Authorization': 'Basic '+api_key})
+
+    response_dict = response.json()
+
+    print(json.dumps(response_dict, indent=4))
+
+    with open(f'content_article.json', 'w', encoding="utf-8") as fJson:
+        json.dump(response_dict, fJson, ensure_ascii=False, indent=4)
+
+
 if __name__ == '__main__':
-    main("Brain tumor")
+    checkAll("Breast Cancer")
+    #main("Breast Cancer")
